@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Abhishek!</title>
+    <!-- Google Fonts for Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #1a103c, #0b0618);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            color: #ffffff;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background Effects */
+        .glow-bg {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(45deg, #ff007f, #7928ca);
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        /* Glassmorphism Premium Card */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 40px 30px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            animation: cardAppear 1s ease-out;
+        }
+
+        /* Photo Frame */
+        .photo-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 25px;
+        }
+
+        .photo-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff007f, #00dfa2, #ffe600);
+            animation: rotateGlow 4s linear infinite;
+        }
+
+        .profile-img {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #0b0618;
+        }
+
+        /* Typography */
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00dfa2;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ffffff, #d2d2d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .friend-message {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #c4c4d4;
+            margin-bottom: 25px;
+        }
+
+        /* Interactive Multi-step Box */
+        .interactive-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .step {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        /* Premium Glow Buttons */
+        .btn-premium {
+            background: linear-gradient(135deg, #ff007f 0%, #7928ca 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 0, 127, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+            margin: 5px;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(255, 0, 127, 0.6);
+        }
+
+        /* Final Reveal Message */
+        .final-wish-box {
+            background: linear-gradient(135deg, rgba(0, 223, 162, 0.2), rgba(121, 40, 202, 0.2));
+            border: 1px solid #00dfa2;
+            padding: 20px;
+            border-radius: 16px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Keyframes */
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+       h2 {
+    border-bottom: 3px solid #ff007f; /* Thickness & color */
+    padding-bottom: 10px;             /* Space between text and line */
+    margin-bottom: 20px;              /* Space below the line */
+    width: 100%;                      /* Full width */
+}
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Ambient background light -->
+    <div class="glow-bg"></div>
+
+    <!-- Main Card -->
+    <div class="card">
+        <!-- Photo -->
+        <div class="photo-wrapper">
+            <img src="t.jpg" alt="Best Friend" class="profile-img">
+        </div>
+
+        <span class="badge">Happy Birthday 🎉</span>
+        <h1>To My Best Friend!</h1>
+        <h2>Abhishek Mocahari</h2>
+
+        <p class="friend-message">
+            Another year older, wiser, and crazier! I made a small journey for you below...
+        </p>
+
+        <!-- Multi-Step Dynamic Section -->
+        <div class="interactive-box">
+            
+            <!-- STEP 1 -->
+            <div class="step active" id="step1">
+                <div class="question-text">Are you ready to unlock your birthday surprise? 🎁</div>
+                <button class="btn-premium" onclick="nextStep(2)">YES, I'M READY! 🚀</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step" id="step2">
+                <div class="question-text">Wait! Do you promise to share your birthday cake with me? 🎂</div>
+                <button class="btn-premium" onclick="nextStep(3)">PROMISE 100%! 🤝</button>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step" id="step3">
+                <div class="question-text">Are you ready to party like crazy tonight? 🥳</div>
+                <button class="btn-premium" onclick="nextStep(4)">HELL YES, LET'S GO! 🔥</button>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step" id="step4">
+                <div class="question-text">One final click... Are you ready for the ultimate wish? ✨</div>
+                <button class="btn-premium" onclick="triggerFinalSurprise()">REVEAL MY SURPRISE! 👑</button>
+            </div>
+
+            <!-- STEP 5: FINAL REVEAL -->
+            <div class="step" id="step5">
+                <div class="final-wish-box">
+                    🎉 <strong>HAPPY BIRTHDAY BESTIE!</strong> 🎉<br>
+                    May your year be full of success, happiness, late-night food, and endless fun! You are true royalty today! 💖👑
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        function nextStep(stepNumber) {
+            // Hide all steps
+            const steps = document.querySelectorAll('.step');
+            steps.forEach(step => step.classList.remove('active'));
+
+            // Show current step
+            document.getElementById('step' + stepNumber).classList.add('active');
+
+            // Small burst of confetti on each click
+            confetti({
+                particleCount: 25,
+                spread: 50,
+                origin: { y: 0.7 }
+            });
+        }
+
+        function triggerFinalSurprise() {
+            // Hide previous step & show final result
+            const steps = document.querySelectorAll('.step');
+            steps.forEach(step => step.classList.remove('active'));
+            document.getElementById('step5').classList.add('active');
+
+            // Big Confetti Explosion!
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+    </script>
+</body>
+</html>
