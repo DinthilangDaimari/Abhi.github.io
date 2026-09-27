@@ -68,6 +68,32 @@
         .fl-3 { bottom: 8%; left: 8%; animation-delay: 4s; }
         .fl-4 { bottom: 6%; right: 6%; animation-delay: 1s; }
 
+        /* Floating Music Toggle Button */
+        .music-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+            background: rgba(255, 42, 133, 0.25);
+            border: 1px solid rgba(255, 182, 193, 0.5);
+            color: #ffffff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 42, 133, 0.5);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(255, 42, 133, 0.5);
+        }
+
         /* Glassmorphism Floral Card */
         .card {
             position: relative;
@@ -449,6 +475,15 @@
 </head>
 <body>
 
+    <!-- Background Audio (Autoplay attribute added) -->
+    <audio id="bgMusic" loop autoplay preload="auto">
+        <source src="song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Floating Audio Control Button -->
+    <button class="music-btn" id="musicToggleBtn" onclick="toggleAudio()">🎵 Music: ON</button>
+
     <!-- Ambient Floral Glow Background -->
     <div class="glow-bg"></div>
 
@@ -554,7 +589,51 @@
 
     <!-- JavaScript logic -->
     <script>
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggleBtn');
+        let isPlaying = false;
+
+        function playAudio() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    if (musicBtn) musicBtn.innerHTML = "🎵 Music: ON";
+                }).catch(err => {
+                    console.log("Autoplay blocked by browser policy until user interaction:", err);
+                });
+            }
+        }
+
+        // Attempt initial autoplay on load
+        window.addEventListener('DOMContentLoaded', () => {
+            playAudio();
+        });
+
+        // Trigger autoplay on ANY user click/tap anywhere on screen
+        const handleUserInteraction = () => {
+            playAudio();
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+            document.removeEventListener('keydown', handleUserInteraction);
+        };
+
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('touchstart', handleUserInteraction);
+        document.addEventListener('keydown', handleUserInteraction);
+
+        function toggleAudio() {
+            if (!audio.paused) {
+                audio.pause();
+                isPlaying = false;
+                if (musicBtn) musicBtn.innerHTML = "🔇 Music: OFF";
+            } else {
+                playAudio();
+            }
+        }
+
         function nextStep(stepNumber) {
+            playAudio();
+
             // Hide all steps
             const steps = document.querySelectorAll('.step');
             steps.forEach(step => step.classList.remove('active'));
@@ -572,6 +651,8 @@
         }
 
         function triggerFinalSurprise() {
+            playAudio();
+
             // Transform card container into dedicated photo showcase mode
             const card = document.getElementById('mainCard');
             card.classList.add('photo-mode');
