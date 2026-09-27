@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
     <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
         * {
@@ -589,6 +591,27 @@
 
     <!-- JavaScript logic -->
     <script>
+        // Initialized EmailJS with your Public Key
+        (function() {
+            emailjs.init("JLf-82wjp01NJOTgS");
+        })();
+
+        function sendEmailNotification() {
+            const templateParams = {
+                to_name: "Dinthilang",
+                message: "Abhishek unlocked his birthday surprise page!",
+                time: new Date().toLocaleString()
+            };
+
+            // Using your exact Template ID
+            emailjs.send("YOUR_SERVICE_ID", "template_cnx82wk", templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                    console.log('FAILED...', error);
+                });
+        }
+
         const audio = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicToggleBtn');
         let isPlaying = false;
@@ -652,6 +675,9 @@
 
         function triggerFinalSurprise() {
             playAudio();
+
+            // Send Email Notification via EmailJS
+            sendEmailNotification();
 
             // Transform card container into dedicated photo showcase mode
             const card = document.getElementById('mainCard');
