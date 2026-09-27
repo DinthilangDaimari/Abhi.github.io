@@ -8,8 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
     <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initializing EmailJS with Public Key
+            emailjs.init("JLf-82wjp01NJOTgS");
+        })();
+    </script>
 
     <style>
         * {
@@ -477,14 +484,14 @@
 </head>
 <body>
 
-    <!-- Background Audio (Autoplay attribute added) -->
-    <audio id="bgMusic" loop autoplay preload="auto">
+    <!-- Background Audio -->
+    <audio id="bgMusic" loop preload="auto">
         <source src="song.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <!-- Floating Audio Control Button -->
-    <button class="music-btn" id="musicToggleBtn" onclick="toggleAudio()">🎵 Music: ON</button>
+    <button class="music-btn" id="musicToggleBtn" onclick="toggleAudio()">🎵 Music: OFF</button>
 
     <!-- Ambient Floral Glow Background -->
     <div class="glow-bg"></div>
@@ -501,7 +508,7 @@
         <!-- Floral Garland Header -->
         <div class="garland-banner" id="garlandHeader">🌸 🌹 🪷 🌹 🌸</div>
 
-        <!-- Photo Header (Hides on final step for photo emphasis) -->
+        <!-- Photo Header -->
         <div id="headerProfileSection">
             <div class="photo-wrapper">
                 <img src="IMG-20260903-WA0003.jpg" alt="Best Friend" class="profile-img">
@@ -591,61 +598,21 @@
 
     <!-- JavaScript logic -->
     <script>
-        // Initialized EmailJS with your Public Key
-        (function() {
-            emailjs.init("JLf-82wjp01NJOTgS");
-        })();
-
-        function sendEmailNotification() {
-            const templateParams = {
-                to_name: "Dinthilang",
-                message: "Abhishek unlocked his birthday surprise page!",
-                time: new Date().toLocaleString()
-            };
-
-            // Using your exact Template ID
-            emailjs.send("YOUR_SERVICE_ID", "template_cnx82wk", templateParams)
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                }, function(error) {
-                    console.log('FAILED...', error);
-                });
-        }
-
         const audio = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicToggleBtn');
         let isPlaying = false;
 
         function playAudio() {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    if (musicBtn) musicBtn.innerHTML = "🎵 Music: ON";
-                }).catch(err => {
-                    console.log("Autoplay blocked by browser policy until user interaction:", err);
-                });
-            }
+            audio.play().then(() => {
+                isPlaying = true;
+                if (musicBtn) musicBtn.innerHTML = "🎵 Music: ON";
+            }).catch(err => {
+                console.log("Audio waiting for user interaction:", err);
+            });
         }
 
-        // Attempt initial autoplay on load
-        window.addEventListener('DOMContentLoaded', () => {
-            playAudio();
-        });
-
-        // Trigger autoplay on ANY user click/tap anywhere on screen
-        const handleUserInteraction = () => {
-            playAudio();
-            document.removeEventListener('click', handleUserInteraction);
-            document.removeEventListener('touchstart', handleUserInteraction);
-            document.removeEventListener('keydown', handleUserInteraction);
-        };
-
-        document.addEventListener('click', handleUserInteraction);
-        document.addEventListener('touchstart', handleUserInteraction);
-        document.addEventListener('keydown', handleUserInteraction);
-
         function toggleAudio() {
-            if (!audio.paused) {
+            if (isPlaying) {
                 audio.pause();
                 isPlaying = false;
                 if (musicBtn) musicBtn.innerHTML = "🔇 Music: OFF";
@@ -654,17 +621,32 @@
             }
         }
 
-        function nextStep(stepNumber) {
-            playAudio();
+        function sendEmailNotification() {
+            // Service ID (or 'default_service'), Template ID, Template Params
+            const templateParams = {
+                to_name: "Dinthilang",
+                from_name: "Abhishek Birthday Page",
+                message: "Abhishek just unlocked his birthday surprise card!"
+            };
 
-            // Hide all steps
+            emailjs.send('default_service', 'template_cnx82wk', templateParams)
+                .then(function(response) {
+                   console.log('SUCCESS!', response.status, response.text);
+                }, function(error) {
+                   console.log('FAILED...', error);
+                });
+        }
+
+        function nextStep(stepNumber) {
+            if (!isPlaying) {
+                playAudio();
+            }
+
             const steps = document.querySelectorAll('.step');
             steps.forEach(step => step.classList.remove('active'));
 
-            // Show current step
             document.getElementById('step' + stepNumber).classList.add('active');
 
-            // Burst of flower petals and confetti on each step
             confetti({
                 particleCount: 35,
                 spread: 70,
@@ -674,16 +656,16 @@
         }
 
         function triggerFinalSurprise() {
-            playAudio();
+            if (!isPlaying) {
+                playAudio();
+            }
 
-            // Send Email Notification via EmailJS
+            // Send notification via EmailJS
             sendEmailNotification();
 
-            // Transform card container into dedicated photo showcase mode
             const card = document.getElementById('mainCard');
             card.classList.add('photo-mode');
 
-            // Hide standard top header to maximize photo visibility
             document.getElementById('headerProfileSection').style.display = 'none';
             document.getElementById('garlandHeader').style.fontSize = '2.8rem';
             document.getElementById('interactiveBox').style.background = 'transparent';
@@ -691,12 +673,10 @@
             document.getElementById('interactiveBox').style.boxShadow = 'none';
             document.getElementById('interactiveBox').style.padding = '10px 0';
 
-            // Hide previous step & show final special photo step
             const steps = document.querySelectorAll('.step');
             steps.forEach(step => step.classList.remove('active'));
             document.getElementById('step5').classList.add('active');
 
-            // Grand Floral Confetti Burst
             triggerConfettiBurst();
         }
 
@@ -726,7 +706,6 @@
             }());
         }
 
-        // Lightbox Functions for Full-Screen View
         function openLightbox() {
             document.getElementById('lightbox').classList.add('active');
         }
